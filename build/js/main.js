@@ -1,5 +1,5 @@
 (function() {
-  require(["/build/js/histogram", "/build/js/cumulative_histogram"], function(Histogram, CumulativeHistogram) {
+  require(["./build/js/histogram", "./build/js/cumulative_histogram"], function(Histogram, CumulativeHistogram) {
     var canvas, ctx, cumulativeHistogram, height, histogram, imageData, modifiedHistogram, modifiedHistogramElement, modifiedImage, modifiedPixels, originalHistogramElement, originalImage, pixelData, width;
     originalImage = document.getElementById("original-image");
     originalHistogramElement = document.getElementById("original-histogram");
