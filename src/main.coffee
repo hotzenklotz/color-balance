@@ -1,7 +1,7 @@
-require
-  baseUrl : "/build/js"
+# require
+#   baseUrl : "build/js"
 
-require ["histogram", "cumulative_histogram"], (Histogram, CumulativeHistogram) ->
+require ["/build/js/histogram", "/build/js/cumulative_histogram"], (Histogram, CumulativeHistogram) ->
 
   originalImage = document.getElementById("original-image")
   originalHistogramElement = document.getElementById("original-histogram")

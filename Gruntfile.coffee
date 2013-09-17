@@ -43,11 +43,10 @@ module.exports = (grunt) ->
           port: 8000
           livereload: true
 
-    deploy:
-      "gh-pages":
-        options:
-            message: 'Auto-generated commit'
-        src: ["**"]
+    "gh-pages":
+      options:
+          message: 'Auto-generated commit'
+      src: ["**"]
 
   })
 
@@ -60,4 +59,5 @@ module.exports = (grunt) ->
 
   # Default task(s).
   grunt.registerTask("default", ["connect", "watch"])
+  grunt.registerTask("deploy", ["gh-pages"])
 
