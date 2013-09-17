@@ -1,6 +1,3 @@
-# require
-#   baseUrl : "build/js"
-
 require ["./build/js/histogram", "./build/js/cumulative_histogram"], (Histogram, CumulativeHistogram) ->
 
   originalImage = document.getElementById("original-image")
@@ -17,8 +14,6 @@ require ["./build/js/histogram", "./build/js/cumulative_histogram"], (Histogram,
 
   ctx = canvas.getContext("2d")
   ctx.drawImage(originalImage, 0, 0, width, height)
-  # ctx.fillRect(0,0,10,10)
-  # ctx.fill()
   imageData = ctx.getImageData(0, 0, width, height)
   pixelData = imageData.data
 
