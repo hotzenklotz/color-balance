@@ -1,4 +1,4 @@
-require ["./build/js/histogram", "./build/js/cumulative_histogram"], (Histogram, CumulativeHistogram) ->
+require ["./build/js/histogram"], (Histogram) ->
 
   originalImage = document.getElementById("original-image")
   originalHistogramElement = document.getElementById("original-histogram")
@@ -21,15 +21,16 @@ require ["./build/js/histogram", "./build/js/cumulative_histogram"], (Histogram,
   histogram = new Histogram(pixelData)
   histogram.draw(originalHistogramElement)
 
-  cumulativeHistogram = new CumulativeHistogram(pixelData)
-  modifiedPixels = cumulativeHistogram.getBalancedColors()
+  ColorBalanceWorker = new Worker("./build/js/color_balance_worker.js")
+  ColorBalanceWorker.addEventListener "message", (evt) ->
+    modifiedPixels = evt.data
 
-  modifiedHistogram = new Histogram(modifiedPixels)
-  modifiedHistogram.draw(modifiedHistogramElement)
+    modifiedHistogram = new Histogram(modifiedPixels)
+    modifiedHistogram.draw(modifiedHistogramElement)
 
-  # imageData.data = modifiedPixels
-  ctx.putImageData(imageData, 0, 0)
-  modifiedImage.src = canvas.toDataURL()
-  modifiedImage.width = "500"
+    imageData.data = modifiedPixels
+    ctx.putImageData(imageData, 0, 0)
+    modifiedImage.src = canvas.toDataURL()
+    modifiedImage.width = "500"
 
-
+  ColorBalanceWorker.postMessage(pixelData)

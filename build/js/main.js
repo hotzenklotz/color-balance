@@ -1,6 +1,6 @@
 (function() {
-  require(["./build/js/histogram", "./build/js/cumulative_histogram"], function(Histogram, CumulativeHistogram) {
-    var canvas, ctx, cumulativeHistogram, height, histogram, imageData, modifiedHistogram, modifiedHistogramElement, modifiedImage, modifiedPixels, originalHistogramElement, originalImage, pixelData, width;
+  require(["./build/js/histogram"], function(Histogram) {
+    var ColorBalanceWorker, canvas, ctx, height, histogram, imageData, modifiedHistogramElement, modifiedImage, originalHistogramElement, originalImage, pixelData, width;
     originalImage = document.getElementById("original-image");
     originalHistogramElement = document.getElementById("original-histogram");
     modifiedHistogramElement = document.getElementById("modified-histogram");
@@ -16,13 +16,18 @@
     pixelData = imageData.data;
     histogram = new Histogram(pixelData);
     histogram.draw(originalHistogramElement);
-    cumulativeHistogram = new CumulativeHistogram(pixelData);
-    modifiedPixels = cumulativeHistogram.getBalancedColors();
-    modifiedHistogram = new Histogram(modifiedPixels);
-    modifiedHistogram.draw(modifiedHistogramElement);
-    ctx.putImageData(imageData, 0, 0);
-    modifiedImage.src = canvas.toDataURL();
-    return modifiedImage.width = "500";
+    ColorBalanceWorker = new Worker("./build/js/color_balance_worker.js");
+    ColorBalanceWorker.addEventListener("message", function(evt) {
+      var modifiedHistogram, modifiedPixels;
+      modifiedPixels = evt.data;
+      modifiedHistogram = new Histogram(modifiedPixels);
+      modifiedHistogram.draw(modifiedHistogramElement);
+      imageData.data = modifiedPixels;
+      ctx.putImageData(imageData, 0, 0);
+      modifiedImage.src = canvas.toDataURL();
+      return modifiedImage.width = "500";
+    });
+    return ColorBalanceWorker.postMessage(pixelData);
   });
 
 }).call(this);
