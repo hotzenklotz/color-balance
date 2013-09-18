@@ -29,7 +29,8 @@
         modifiedHistogram.draw(modifiedHistogramElement);
         imageData.data.set(modifiedPixels);
         ctx.putImageData(imageData, 0, 0);
-        return modifiedImage.src = canvas.toDataURL();
+        modifiedImage.src = canvas.toDataURL();
+        return modifiedImage.width = "500";
       });
       return ColorBalanceWorker.postMessage(pixelData);
     });

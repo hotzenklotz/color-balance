@@ -35,5 +35,6 @@ require ["./build/js/histogram"], (Histogram) ->
       imageData.data.set(modifiedPixels)
       ctx.putImageData(imageData, 0, 0)
       modifiedImage.src = canvas.toDataURL()
+      modifiedImage.width = "500"
 
     ColorBalanceWorker.postMessage(pixelData)
