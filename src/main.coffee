@@ -1,35 +1,39 @@
-require ["./build/js/histogram", "./build/js/cumulative_histogram"], (Histogram, CumulativeHistogram) ->
+require ["./build/js/histogram"], (Histogram) ->
 
   originalImage = document.getElementById("original-image")
+  modifiedImage = document.getElementById("modified-image")
   originalHistogramElement = document.getElementById("original-histogram")
   modifiedHistogramElement = document.getElementById("modified-histogram")
-  modifiedImage = document.getElementById("modified-image")
 
-  width = originalImage.width
-  height = originalImage.height
+  image = new Image()
+  image.src = originalImage.src
+  image.addEventListener "load", ->
 
-  canvas = document.createElement("canvas")
-  canvas.width = width
-  canvas.height = height
+    width = image.width
+    height = image.height
 
-  ctx = canvas.getContext("2d")
-  ctx.drawImage(originalImage, 0, 0, width, height)
-  imageData = ctx.getImageData(0, 0, width, height)
-  pixelData = imageData.data
+    canvas = document.createElement("canvas")
+    canvas.width = width
+    canvas.height = height
 
-  #draw the RGB histogram for visual reference
-  histogram = new Histogram(pixelData)
-  histogram.draw(originalHistogramElement)
+    ctx = canvas.getContext("2d")
+    ctx.drawImage(image, 0, 0, width, height)
+    imageData = ctx.getImageData(0, 0, width, height)
+    pixelData = imageData.data
 
-  cumulativeHistogram = new CumulativeHistogram(pixelData)
-  modifiedPixels = cumulativeHistogram.getBalancedColors()
+    #draw the RGB histogram for visual reference
+    histogram = new Histogram(pixelData)
+    histogram.draw(originalHistogramElement)
 
-  modifiedHistogram = new Histogram(modifiedPixels)
-  modifiedHistogram.draw(modifiedHistogramElement)
+    ColorBalanceWorker = new Worker("./build/js/color_balance_worker.js")
+    ColorBalanceWorker.addEventListener "message", (evt) =>
+      modifiedPixels = evt.data
 
-  # imageData.data = modifiedPixels
-  ctx.putImageData(imageData, 0, 0)
-  modifiedImage.src = canvas.toDataURL()
-  modifiedImage.width = "500"
+      modifiedHistogram = new Histogram(modifiedPixels)
+      modifiedHistogram.draw(modifiedHistogramElement)
 
+      imageData.data.set(modifiedPixels)
+      ctx.putImageData(imageData, 0, 0)
+      modifiedImage.src = canvas.toDataURL()
 
+    ColorBalanceWorker.postMessage(pixelData)
