@@ -46,7 +46,7 @@
           "red": red,
           "green": green,
           "blue": blue,
-          "overall": operation(red, Math.max(green, blue))
+          "overall": operation(red, operation(green, blue))
         };
       };
 
@@ -67,6 +67,7 @@
         var heightScale, i, widthScale, x, y, _i;
         heightScale = this.height / this.getMax().overall;
         widthScale = this.width / 256;
+        this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = color;
         this.ctx.beginPath();
         this.ctx.moveTo(0, 0);

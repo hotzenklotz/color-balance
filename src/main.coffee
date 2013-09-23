@@ -1,40 +1,95 @@
-require ["./build/js/histogram"], (Histogram) ->
+require ["./build/js/histogram", "./build/js/job_queue", "./build/js/bower_components/promise/promise"], (Histogram, JobQueue, Promise) ->
 
-  originalImage = document.getElementById("original-image")
-  modifiedImage = document.getElementById("modified-image")
-  originalHistogramElement = document.getElementById("original-histogram")
-  modifiedHistogramElement = document.getElementById("modified-histogram")
+  jobQueue = new JobQueue()
+  ajax = new XMLHttpRequest();
 
-  image = new Image()
-  image.src = originalImage.src
-  image.addEventListener "load", ->
+  ajax.open("GET", "./images/images.json", true);
+  ajax.responseType = "json";
+  ajax.addEventListener "load", (evt) ->
 
-    width = image.width
-    height = image.height
+    images  = ajax.response
+    for imageSrc in images
+      jobQueue.enqueue processImage, imageSrc
 
-    canvas = document.createElement("canvas")
-    canvas.width = width
-    canvas.height = height
+  ajax.send()
 
-    ctx = canvas.getContext("2d")
-    ctx.drawImage(image, 0, 0, width, height)
-    imageData = ctx.getImageData(0, 0, width, height)
-    pixelData = imageData.data
+  processImage = (imageSrc) ->
 
-    #draw the RGB histogram for visual reference
-    histogram = new Histogram(pixelData)
-    histogram.draw(originalHistogramElement)
+    promise = new window.Promise()
 
-    ColorBalanceWorker = new Worker("./build/js/color_balance_worker.js")
-    ColorBalanceWorker.addEventListener "message", (evt) =>
-      modifiedPixels = evt.data
+    image = new Image()
+    image.src = imageSrc
+    image.addEventListener "load", ->
 
-      modifiedHistogram = new Histogram(modifiedPixels)
-      modifiedHistogram.draw(modifiedHistogramElement)
+      width = image.width
+      height = image.height
 
-      imageData.data.set(modifiedPixels)
-      ctx.putImageData(imageData, 0, 0)
-      modifiedImage.src = canvas.toDataURL()
-      modifiedImage.width = "500"
+      elements = appendImageAndCanvasGroup(width, height)
+      elements.originalImage.src = image.src
 
-    ColorBalanceWorker.postMessage(pixelData)
+      canvas = elements.modifiedImage
+      canvas.width = width
+      canvas.height = height
+
+      ctx = canvas.getContext("2d")
+      ctx.drawImage(image, 0, 0, width, height)
+      imageData = ctx.getImageData(0, 0, width, height)
+      pixelData = imageData.data
+
+      #draw the RGB histogram for visual reference
+      histogram = new Histogram(pixelData)
+      histogram.draw(elements.originalHistogram)
+
+      ColorBalanceWorker = new Worker("./build/js/color_balance_worker.js")
+      ColorBalanceWorker.addEventListener "message", (evt) =>
+        modifiedPixels = evt.data
+
+        #Draw the modified histogram too
+        modifiedHistogram = new Histogram(modifiedPixels)
+        modifiedHistogram.draw(elements.modifiedHistogram)
+
+        #paint the modified image
+        imageData.data.set(modifiedPixels)
+        ctx.putImageData(imageData, 0, 0, 0, 0, width, height)
+
+        #done
+        promise.fulfil(true)
+
+      ColorBalanceWorker.postMessage(pixelData)
+
+    promise
+
+
+  appendImageAndCanvasGroup = (width, height) ->
+
+    #original iamge and histogram
+    body = document.body
+    div = document.createElement("div")
+    body.appendChild(div)
+
+    image = document.createElement("img")
+    histogram = document.createElement("canvas")
+    histogram.id = "histogram"
+    histogram.width = width
+    histogram.height = height
+    div.appendChild(image)
+    div.appendChild(histogram)
+
+    #modified image and histogram
+    div = document.createElement("div")
+    body.appendChild(div)
+
+    modifiedImage = document.createElement("canvas")
+    modifiedHistogram = document.createElement("canvas")
+    modifiedHistogram.id = "histogram"
+    modifiedHistogram.width = width
+    modifiedHistogram.height = height
+    div.appendChild(modifiedImage)
+    div.appendChild(modifiedHistogram)
+
+    return {
+      "originalImage": image
+      "originalHistogram": histogram
+      "modifiedImage": modifiedImage
+      "modifiedHistogram": modifiedHistogram
+    }

@@ -63,7 +63,7 @@
       }
     };
     getBalancedColors = function() {
-      var i, _i, _ref;
+      var a, i, _i, _ref;
       red = green = blue = 0;
       for (i = _i = 0, _ref = pixelData.length; _i <= _ref; i = _i += 4) {
         red = pixelData[i];
@@ -72,6 +72,9 @@
         red = clamp(minRed, maxRed, red);
         green = clamp(minGreen, maxGreen, green);
         blue = clamp(minBlue, maxBlue, blue);
+        if (red < 10) {
+          a = red;
+        }
         pixelData[i] = (red - minRed) * 255 / (maxRed - minRed);
         pixelData[i + 1] = (green - minGreen) * 255 / (maxGreen - minGreen);
         pixelData[i + 2] = (blue - minBlue) * 255 / (maxBlue - minBlue);

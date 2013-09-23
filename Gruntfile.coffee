@@ -6,14 +6,17 @@ module.exports = (grunt) ->
     watch:
       options:
         livereload: true
-      coffee: 
+      coffee:
         files: "src/*.coffee"
         tasks: ["coffee:development"]
-      less: 
+      less:
         files: "css/*.less"
         tasks: ["less:development"]
       html:
         files: "*.html"
+      images:
+        files: ["images/**", "!images/images.json"]
+        tasks: ["collect-images"]
 
     coffee:
       development:
@@ -45,7 +48,7 @@ module.exports = (grunt) ->
 
     "gh-pages":
       options:
-          message: 'Auto-generated commit'
+          message: "Auto-generated commit"
       src: ["**"]
 
   })
@@ -60,4 +63,11 @@ module.exports = (grunt) ->
   # Default task(s).
   grunt.registerTask("default", ["connect", "watch"])
   grunt.registerTask("deploy", ["gh-pages"])
+  grunt.registerTask("collect-images", ->
+    grunt.util.spawn(
+      {
+        cmd: "node",
+        args: ["build/js/collect_files.js"]
+      })
+  )
 

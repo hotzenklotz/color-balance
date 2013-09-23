@@ -78,6 +78,9 @@ self.addEventListener "message", (evt) ->
       green = clamp(minGreen, maxGreen, green)
       blue = clamp(minBlue, maxBlue, blue)
 
+      if red < 10
+        a = red
+
       # rescale
       pixelData[i] = (red - minRed) * 255 / (maxRed - minRed)
       pixelData[i + 1] = (green - minGreen) * 255 / (maxGreen - minGreen)

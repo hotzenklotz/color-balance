@@ -46,7 +46,7 @@ define ["./utility"], (Utility) ->
         "red": red
         "green": green
         "blue": blue
-        "overall": operation(red, Math.max(green, blue))
+        "overall": operation(red, operation(green, blue))
 
 
     draw : (@element) ->
@@ -70,6 +70,7 @@ define ["./utility"], (Utility) ->
       heightScale = @height / @getMax().overall
       widthScale = @width / 256
 
+      @ctx.lineWidth = 1
       @ctx.strokeStyle = color
       @ctx.beginPath()
       @ctx.moveTo(0, 0)
