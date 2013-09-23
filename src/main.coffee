@@ -13,7 +13,6 @@ require ["./build/js/histogram", "./build/js/job_queue", "./build/js/bower_compo
 
   ajax.send()
 
-
   processImage = (imageSrc) ->
 
     promise = new window.Promise()
@@ -50,10 +49,6 @@ require ["./build/js/histogram", "./build/js/job_queue", "./build/js/bower_compo
         modifiedHistogram.draw(elements.modifiedHistogram)
 
         #paint the modified image
-        # canvas = elements.modifiedImage
-        # ctx = canvas.getContext("2d")
-        # ctx.drawImage(image, 0, 0, width, height)
-        # imageData = ctx.getImageData(0, 0, width, height)
         imageData.data.set(modifiedPixels)
         ctx.putImageData(imageData, 0, 0, 0, 0, width, height)
 
