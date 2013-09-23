@@ -49,7 +49,7 @@ module.exports = (grunt) ->
     "gh-pages":
       options:
           message: "Auto-generated commit"
-      src: ["**"]
+      src: ["**", "build/**"]
 
   })
 
