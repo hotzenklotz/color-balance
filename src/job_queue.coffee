@@ -17,18 +17,18 @@ define ->
       @next()
 
 
-    next: ->
+    next: =>
 
       if @running < MAX_RUNNING
         @running++
 
-        func = @queue[@cursor]
-        @cursor++
-        console.log new Date().toString()
-        promise = func()
-        promise.then(@done.bind(@))
+        if @cursor < @queue.length
+          func = @queue[@cursor]
+          @cursor++
+          promise = func()
+          promise.then(@done)
 
-    done : ->
+    done : =>
 
       @running--
-      @next()
+      window.requestAnimationFrame(@next)

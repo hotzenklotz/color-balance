@@ -62,29 +62,30 @@ require ["./build/js/histogram", "./build/js/job_queue", "./build/js/bower_compo
 
   appendImageAndCanvasGroup = (width, height) ->
 
-    #original iamge and histogram
-    body = document.body
+    #original iamge and modified image elements
+    container = document.getElementById("container")
     div = document.createElement("div")
-    body.appendChild(div)
+    container.appendChild(div)
 
     image = document.createElement("img")
+    modifiedImage = document.createElement("canvas")
+    div.appendChild(image)
+    div.appendChild(modifiedImage)
+
+    #modified image histgram and  original histogram
+    div = document.createElement("div")
+    container.appendChild(div)
+
     histogram = document.createElement("canvas")
     histogram.id = "histogram"
     histogram.width = width
     histogram.height = height
-    div.appendChild(image)
     div.appendChild(histogram)
 
-    #modified image and histogram
-    div = document.createElement("div")
-    body.appendChild(div)
-
-    modifiedImage = document.createElement("canvas")
     modifiedHistogram = document.createElement("canvas")
     modifiedHistogram.id = "histogram"
     modifiedHistogram.width = width
     modifiedHistogram.height = height
-    div.appendChild(modifiedImage)
     div.appendChild(modifiedHistogram)
 
     return {

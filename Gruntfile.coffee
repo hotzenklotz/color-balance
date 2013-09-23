@@ -15,7 +15,7 @@ module.exports = (grunt) ->
       html:
         files: "*.html"
       images:
-        files: ["images/**", "!images/images.json"]
+        files: ["images/**.jpg", "images/**.png", "!images/images.json"]
         tasks: ["collect-images"]
 
     coffee:
@@ -49,7 +49,7 @@ module.exports = (grunt) ->
     "gh-pages":
       options:
           message: "Auto-generated commit"
-      src: ["**"]
+      src: ["images/**", "build/**", "index.html" ,"!npm_modules/**"]
 
   })
 
