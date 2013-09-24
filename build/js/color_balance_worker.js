@@ -62,8 +62,11 @@
         return maxGreen++;
       }
     };
-    getBalancedColors = function() {
+    getBalancedColors = function(data) {
       var a, i, _i, _ref;
+      if (data) {
+        pixelData = data;
+      }
       red = green = blue = 0;
       for (i = _i = 0, _ref = pixelData.length; _i <= _ref; i = _i += 4) {
         red = pixelData[i];
