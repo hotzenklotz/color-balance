@@ -59,12 +59,14 @@ self.addEventListener "message", (evt) ->
         maxGreen++
 
 
-  getBalancedColors = ->
+  getBalancedColors = (data) ->
     # implementation for the "simplest color balance" algorithm as outlined
     # in http://www.ipol.im/pub/art/2011/llmps-scb/ and
     # http://scien.stanford.edu/pages/labsite/2010/psych221/projects/2010/JasonSu/simplestcb.html
     #
     # This method can be replaced by a shader.
+    if data
+      pixelData = data
 
     red = green = blue = 0
 

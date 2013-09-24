@@ -1,0 +1,121 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gallery of GIMP algorithms</title>
+  <style type="text/css">
+    .row {
+      clear: both;
+      padding: 0 10px;
+    }
+    .col {
+      width: 22.5%;
+      margin: 1%;
+      float: left;
+    }
+
+    #container {
+      width: 1200px;
+      margin: 0 auto;
+      max-width: 1220px;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #popup {
+      position: fixed;
+      top: 10px;
+      width: 800px;
+      height: auto;
+      left: 50%;
+      margin-left: -400px;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div class="row">
+      <h2>Sample gallery of &quot;auto-enhanced&quot; images.</h2>
+        <p>All images were modified using GIMP's auto levels, auto white balance and auto color enhancment algorithm.</p>
+    </div>
+
+    <div class="row">
+      <div class="col">Original</div>
+      <div class="col">Auto Levels</div>
+      <div class="col">Auto White Balance</div>
+      <div class="col">Auto Color Enhance</div>
+    </div>
+
+    <div class="row">
+      <div class="col"><img src="../IMG_0001.jpg"></div>
+      <div class="col"><img src="IMG_0001_auto_levels.jpg"></div>
+      <div class="col"><img src="IMG_0001_auto_wb.jpg"></div>
+      <div class="col"><img src="IMG_0001_auto_color_enhance.jpg"></div>
+    </div>
+
+    <div class="row">
+      <div class="col"><img src="../IMG_0002.jpg"></div>
+      <div class="col"><img src="IMG_0002_auto_levels.jpg"></div>
+      <div class="col"><img src="IMG_0002_auto_wb.jpg"></div>
+      <div class="col"><img src="IMG_0002_auto_color_enhance.jpg"></div>
+    </div>
+
+    <div class="row">
+      <div class="col"><img src="../IMG_0007.jpg"></div>
+      <div class="col"><img src="IMG_0007_auto_levels.jpg"></div>
+      <div class="col"><img src="IMG_0007_auto_wb.jpg"></div>
+      <div class="col"><img src="IMG_0007_auto_color_enhance.jpg"></div>
+    </div>
+
+    <div class="row">
+      <div class="col"><img src="../IMG_0012.jpg"></div>
+      <div class="col"><img src="IMG_0012_auto_levels.jpg"></div>
+      <div class="col"><img src="IMG_0012_auto_wb.jpg"></div>
+      <div class="col"><img src="IMG_0012_auto_color_enhance.jpg"></div>
+    </div>
+
+    <div class="row">
+      <div class="col"><img src="../nyan.jpg"></div>
+      <div class="col"><img src="nyan_auto_levels.jpg"></div>
+      <div class="col"><img src="nyan_auto_wb.jpg"></div>
+      <div class="col"><img src="nyan_auto_color_enhance.jpg"></div>
+    </div>
+
+    <div id="popup">
+      <img src="" id="popup_image">
+    </div>
+
+  </div>
+  <script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    images = document.getElementsByTagName("img");
+    popup = document.getElementById("popup");
+    popup_image = document.getElementById("popup_image");
+
+    for(var i=0; i < images.length; i++) {
+      images[i].addEventListener("mouseenter", function(evt) {
+        src = evt.target.src;
+        if (popup_image != src) {
+          popup_image.src = src;
+          popup.style.display = "inline";
+        }
+      });
+
+      images[i].addEventListener("mouseleave", function(evt) {
+        popup.style.display = "none";
+      });
+
+      images[i].addEventListener("click", function(evt) {
+        window.open(evt.target.src);
+      });
+    }
+  });
+
+
+  </script>
+</body>
+</html>
