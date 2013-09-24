@@ -1,0 +1,27 @@
+#container {
+  width: 1220px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  width: 600px;
+  margin-bottom: 10px;
+}
+canvas {
+  margin-bottom: 10px;
+}
+canvas#histogram {
+  width: 600px;
+  height: 400px;
+  border: 1px solid black;
+}
+div canvas:nth-child(2) {
+  width: 600px;
+  margin-left: 10px;
+}
+span {
+  width: 600px;
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
+}

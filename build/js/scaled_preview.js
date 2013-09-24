@@ -13,6 +13,8 @@
         height = width / aspectRatio;
         elements = appendImageAndCanvasGroup(image.width, image.height, width + " x " + height);
         originalImage = elements.originalImage;
+        originalImage.width = width;
+        originalImage.height = height;
         ctx = originalImage.getContext("2d");
         ctx.drawImage(image, 0, 0, width, height);
         preview_pixelData = ctx.getImageData(0, 0, width, height).data;
@@ -25,7 +27,6 @@
         ctx.drawImage(image, 0, 0, width, height);
         imageData = ctx.getImageData(0, 0, width, height);
         pixelData = imageData.data;
-        console.log(pixelData.length);
         ColorBalanceWorker = new Worker("./build/js/color_balance_worker.js");
         ColorBalanceWorker.addEventListener("message", function(evt) {
           var modifiedHistogram, modifiedPixels;
@@ -41,17 +42,18 @@
       return promise;
     };
     appendImageAndCanvasGroup = function(width, height, text) {
-      var container, div, histogram, image, modifiedHistogram, modifiedImage;
+      var container, div, histogram, image, modifiedHistogram, modifiedImage, span;
       container = document.getElementById("container");
       div = document.createElement("div");
       container.appendChild(div);
-      div.innerText = text;
+      div.textContent = text;
       div = document.createElement("div");
       container.appendChild(div);
+      span = document.createElement("span");
       image = document.createElement("canvas");
+      span.appendChild(image);
+      div.appendChild(span);
       modifiedImage = document.createElement("canvas");
-      modifiedImage.style.verticalAlign = "top";
-      div.appendChild(image);
       div.appendChild(modifiedImage);
       div = document.createElement("div");
       container.appendChild(div);
@@ -73,7 +75,10 @@
       };
     };
     processImage("images/IMG_0002.jpg", 100);
-    return processImage("images/IMG_0002.jpg", 200);
+    processImage("images/IMG_0002.jpg", 200);
+    processImage("images/IMG_0002.jpg", 300);
+    processImage("images/IMG_0002.jpg", 400);
+    return processImage("images/IMG_0002.jpg", 500);
   });
 
 }).call(this);
